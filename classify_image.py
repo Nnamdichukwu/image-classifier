@@ -1,4 +1,7 @@
 import os
+from pathlib import Path
+from PIL import Image
+from resizeimage import resizeimage
 import sys
 import numpy as np
 import shutil
@@ -6,18 +9,41 @@ import json
 from keras.preprocessing import image
 from keras.preprocessing.image import ImageDataGenerator
 from tqdm import tqdm
-from constants import default_model
-from constants import model_dir
-from constants import model_extension
-from constants import image_extensions
-from constants import json_file
-from model import import_model
-from model import all_models
-from PIL import Image
-from resizeimage import resizeimage
+from keras.models import load_model
+
+default_model = 'default_model.h5'
+# root_dir = Path(__file__) # The root directory (mlclassification)
+# model_dir = os.path.join(root_dir, "models") # the models directory
+model_extension = ".h5"
+json_file = 'classification_results.json'  # the file name
+image_extensions = ('jpeg', 'png', 'jpg', 'JPG')  # add others
+default_train_folder_path='./datasets/training_set'
+default_test_folder_path='./datasets/test_set'
+truth_values = ['yes', 'y','true','1', 'on']
+false_values = ['no','n', 'false','0', 'off']
+
+def all_models(default=False):
+
+    if default:
+        return default_model
+
+    all_models = [] # List of all the models in the models directory
+
+    for folder_name, folders, files in os.walk(model_dir):
+        for file in files:
+            if file.split('.')[1].lower() == 'h5':
+                all_models.append(file)
+                
+    return all_models
 
 
-# Use the default one if no one is supplied by the user
+def import_model(model_name):
+    model= default_model
+    # model_path = os.path.join(model_dir, model_name)
+    classifier = load_model(model)
+
+    return classifier
+
 def predictor(input_type, folder_or_image, model, directory_folder=None):
     """
     Accepts either a folder or an image, and a model argument that's the ML model
@@ -26,23 +52,24 @@ def predictor(input_type, folder_or_image, model, directory_folder=None):
     """
 
     # Load the model
-    model = os.path.join(model_dir,model)
+    # model = os.path.join(model_dir,model)
+    model = default_model
     classifier = import_model(model)
 
-    if input_type == 'file':
+    # if input_type == 'file':
 
-        # Removed the file type vaildation that was here before because it's already done in the argparser place.
-        # No need for redundancy
-        outcome = test(classifier, folder_or_image)
+    #     # Removed the file type vaildation that was here before because it's already done in the argparser place.
+    #     # No need for redundancy
+    #     outcome = test(classifier, folder_or_image)
 
-        if outcome == True:
-            print("\nThe image is not a hotel")
-            sys.stdout.flush()
-            return
+    #     if outcome == True:
+    #         print("\nThe image is not a hotel")
+    #         sys.stdout.flush()
+    #         return
 
-        print("\nThis image is a hotel")
-        sys.stdout.flush()
-        return  # important. Must return
+    #     print("\nThis image is a hotel")
+    #     sys.stdout.flush()
+    #     return  # important. Must return
 
     # It's implicit that the input type is a folder from here on
     folder_ = folder_or_image
@@ -151,3 +178,24 @@ def printResult(result):
         prediction = False
 
     return prediction
+def create_folder_and_classify_image(path):
+    list_folder=[]
+    for files in os.listdir(path):
+        list_folder.append(files)
+    for folder in list_folder:
+       
+             
+        if len(os.path.basename(folder)) ==1:
+            for new_directory in os.listdir(path+'/'+folder):
+                
+               
+                for new_folder in os.listdir(path+'/'+folder+'/'+new_directory):
+                    # print(folder)
+                    default_model = 'default_model.h5'
+                    hotel_website_folder= path+'/'+folder+'/'+new_directory+"/"+new_folder
+                    if os.path.basename(hotel_website_folder) == 'hotel_website':
+                
+                        predictor('folder', hotel_website_folder, default_model, path+'/'+folder+'/'+new_directory)
+                    # predict('predict -path ' + fie)
+        
+create_folder_and_classify_image('/home/hotelsng/test/')
