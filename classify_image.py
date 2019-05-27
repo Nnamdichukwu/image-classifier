@@ -17,8 +17,7 @@ default_model = 'default_model.h5'
 model_extension = ".h5"
 json_file = 'classification_results.json'  # the file name
 image_extensions = ('jpeg', 'png', 'jpg', 'JPG')  # add others
-default_train_folder_path='./datasets/training_set'
-default_test_folder_path='./datasets/test_set'
+
 truth_values = ['yes', 'y','true','1', 'on']
 false_values = ['no','n', 'false','0', 'off']
 
