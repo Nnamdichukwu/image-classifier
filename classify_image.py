@@ -111,13 +111,12 @@ def predictor(input_type, folder_or_image, model, directory_folder=None):
     return
 
 def test(classifier, test_img):
-
     test_image = prepImage(test_img)
     result = classifier.predict(test_image)
+    
     return printResult(result)
 
 def prepImage(testImage):
-
     test_image = image.load_img(testImage, target_size=(64, 64))
     test_image = image.img_to_array(test_image)
     test_image = np.expand_dims(test_image, axis=0)
@@ -132,6 +131,7 @@ def printResult(result):
         prediction = False
 
     return prediction
+
 def create_folder_and_classify_image(path):
     list_folder=[]
     for files in os.listdir(path):
