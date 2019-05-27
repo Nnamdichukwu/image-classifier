@@ -6,13 +6,13 @@ import json
 from keras.preprocessing import image
 from keras.preprocessing.image import ImageDataGenerator
 from tqdm import tqdm
-from utils.constants import default_model
-from utils.constants import model_dir
-from utils.constants import model_extension
-from utils.constants import image_extensions
-from utils.constants import json_file
-from utils.model import import_model
-from utils.model import all_models
+from constants import default_model
+from constants import model_dir
+from constants import model_extension
+from constants import image_extensions
+from constants import json_file
+from model import import_model
+from model import all_models
 from PIL import Image
 from resizeimage import resizeimage
 

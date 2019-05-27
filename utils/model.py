@@ -1,8 +1,8 @@
 import os
 import sys
-from utils.constants import default_model
-from utils.constants import model_dir
-from utils.constants import model_extension
+from constants import default_model
+from constants import model_dir
+from constants import model_extension
 from keras.models import load_model
 
 # def model_delete(model_file):

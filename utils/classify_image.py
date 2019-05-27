@@ -7,7 +7,7 @@
 import os
 import shutil
 # from app import main as predict
-from utils.predict_model import predictor
+from predict_model import predictor
 
 
 # In[3]:
