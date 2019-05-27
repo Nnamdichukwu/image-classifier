@@ -12,8 +12,6 @@ from tqdm import tqdm
 from keras.models import load_model
 
 default_model = 'default_model.h5'
-# root_dir = Path(__file__) # The root directory (mlclassification)
-# model_dir = os.path.join(root_dir, "models") # the models directory
 model_extension = ".h5"
 json_file = 'classification_results.json'  # the file name
 image_extensions = ('jpeg', 'png', 'jpg', 'JPG')  # add others
@@ -21,24 +19,11 @@ image_extensions = ('jpeg', 'png', 'jpg', 'JPG')  # add others
 truth_values = ['yes', 'y','true','1', 'on']
 false_values = ['no','n', 'false','0', 'off']
 
-def all_models(default=False):
-
-    if default:
-        return default_model
-
-    all_models = [] # List of all the models in the models directory
-
-    for folder_name, folders, files in os.walk(model_dir):
-        for file in files:
-            if file.split('.')[1].lower() == 'h5':
-                all_models.append(file)
-                
-    return all_models
 
 
 def import_model(model_name):
     model= default_model
-    # model_path = os.path.join(model_dir, model_name)
+ 
     classifier = load_model(model)
 
     return classifier
@@ -51,42 +36,16 @@ def predictor(input_type, folder_or_image, model, directory_folder=None):
     """
 
     # Load the model
-    # model = os.path.join(model_dir,model)
+   
     model = default_model
     classifier = import_model(model)
 
-    # if input_type == 'file':
-
-    #     # Removed the file type vaildation that was here before because it's already done in the argparser place.
-    #     # No need for redundancy
-    #     outcome = test(classifier, folder_or_image)
-
-    #     if outcome == True:
-    #         print("\nThe image is not a hotel")
-    #         sys.stdout.flush()
-    #         return
-
-    #     print("\nThis image is a hotel")
-    #     sys.stdout.flush()
-    #     return  # important. Must return
-
-    # It's implicit that the input type is a folder from here on
+    
     folder_ = folder_or_image
     prediction = []  # list of file names that are the prediction
     not_prediction = []  # list of file names that are not the prediction
     #First create prediction folder inside provided folder
-    main_prediction_folder = os.path.join(folder_)
-    # if os.path.isdir(main_prediction_folder):
-    #     shutil.rmtree(main_prediction_folder)
-    # os.mkdir(main_prediction_folder)
-    # Make the prediction and not prediction folders (just thier paths)
-    # I used some form of dynamic naming here to create the folder names
-    # Please feel free to change it to something more suitable.
-    # I simply used the folder name of the current folder being checked as
-    # the prediction folder and then added 'not_' to that name for the
-    # not_prediction folder. So if 'hotels' was being checked, the folder
-    # names for the predictions would be 'hotels' and 'not_hotels'
-    # Kindly change as deemed.
+   
         
     prediction_folder = os.path.join(
             directory_folder, 'hotel_image')
@@ -145,11 +104,7 @@ def predictor(input_type, folder_or_image, model, directory_folder=None):
                     shutil.copy(os.path.join(root, file),
                                 prediction_folder)
 
-        # Then actually write to JSON (Since we are still using JSON)
-        # with open(os.path.join(main_prediction_folder, json_file), 'w') as f:
-        #     json.dump({os.path.basename(root): prediction,
-        #                'not_' + os.path.basename(root): not_prediction}, f)
-       
+        
         prediction.clear() # clear the list containing the prediction names for use in the next iterated folder
         not_prediction.clear()  # Do the same for the not_prediction list
 
